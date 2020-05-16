@@ -1,0 +1,9 @@
+body {
+    background-color: #303030;
+}
+
+.board {
+    letter-spacing: 2px;
+    font-family: monospace;
+    color: white;
+}

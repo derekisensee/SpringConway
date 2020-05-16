@@ -28,10 +28,24 @@ public class Board {
         board[9] = new char[]{'.', '.', '.', '.', '.', '.', '.', '.', '.', '.'};
     }
 
-    public Board(int size) {
+    @GetMapping("/randBoard")
+    public Map<String, char[][]> genRandBoard() {
+        int size = 100;
         board = new char[size][size];
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                Random rand = new Random();
+                int r = rand.nextInt(1000);
+                if (r <= 500) {
+                    board[i][j] = aliveChar;
+                } else
+                    board[i][j] = '.';
+            }
+        }
+        Map<String, char[][]> message = new HashMap<>();
+        message.put("board", board);
+        return message;
     }
-    // ------------
 
     // returns number of alive things surrounding coords
     private int getSurroundingCount(int y, int x) {
@@ -130,6 +144,7 @@ public class Board {
         return false;
     }
 
+    // returns board array in "message" - accessed as "response.data.board"
     @GetMapping("/board")
     public Map<String, char[][]> runTurn() {
         char[][] newBoard = new char[board.length][board.length];
@@ -141,16 +156,9 @@ public class Board {
                     newBoard[i][j] = '.';
             }
         }
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                System.out.print(newBoard[i][j]);
-            }
-            System.out.println();
-        }
         board = newBoard;
         Map<String, char[][]> message = new HashMap<>();
         message.put("board", board);
-        //return "index.html";
         return message;
     }
 }
