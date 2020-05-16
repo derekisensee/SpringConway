@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+<div id='app'>
+    <button id="startbtn">start</button>
+</div>
+
+<script>
+    var timeout;
+
+    var app = new Vue({
+        el: "#app",
+        data: {
+            board: ''
+        },
+        methods: {
+            getBoard: function() {
+                axios.request({
+                    method: 'GET',
+                    url: 'http://localhost:8080/board'
+                }).then(response => {
+                    console.log(response.data.board);
+
+                })
+            }
+        }
+    });
+
+    document.getElementById("startbtn").onclick = function start() {
+        timeout = setInterval(app.getBoard(), 200);
+    }
+</script>
+</body>
+</html>
