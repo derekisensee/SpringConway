@@ -13,6 +13,17 @@
         <button id="startbtn">start</button>
         <button id="stopbtn">stop</button>
         <button id="genBoard">Generate Random Board</button>
+        <!-- Shape selector to place shapes on grid. Gets shapes from mongodb -->
+        <div class="selector">
+            <input type="number" id="x">
+            <label for="x">x value</label>
+            <input type="number" id="y">
+            <label for="y">y value</label>
+            <select id="shapeSelector">
+                <option v-for="shape in shapes">{{shape}}</option>
+            </select>
+            <button id="shapePlace">Place Shape</button>
+        </div>
         <div class="board" v-for="row in board">
             <div>{{row}}</div>
         </div>
@@ -24,7 +35,8 @@
         var app = new Vue({
             el: "#app",
             data: {
-                board: ''
+                board: '',
+                shapes: ''
             },
             methods: {
                 genBoard: function() { // random board generation
@@ -47,6 +59,16 @@
                 },
                 boardInterval: function() { // updates board every 200ms
                     timeout = setInterval(() => this.getBoard(), 200);
+                },
+                getShape: function() {
+                    axios.request({
+                        method: 'GET',
+                        url: 'http://localhost:8080/getShapes'
+                    }).then(response => {
+                       var shapes = response.data;
+                       console.log(shapes);
+                       this.shapes = shapes;
+                    });
                 }
             }
         });
@@ -61,6 +83,10 @@
 
         document.getElementById("genBoard").onclick = function randBoard() {
             app.genBoard();
+        }
+
+        document.getElementById("shapePlace").onclick = function getShape() {
+            app.getShape();
         }
     </script>
 </body>

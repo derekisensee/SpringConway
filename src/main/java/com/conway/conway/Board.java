@@ -1,12 +1,12 @@
 package com.conway.conway;
 
-import org.springframework.stereotype.Controller;
+import com.mongodb.client.*;
+import org.bson.Document;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.Timer;
 
 @RestController
 public class Board {
@@ -47,7 +47,35 @@ public class Board {
         return message;
     }
 
+    // returns shapes as a Map from the mongodb database
+    @GetMapping("/getShapes")
+    public Map<String, String> getShapes() {
+        Map<String, String> shapes = new HashMap<>();
+        MongoClient mongo = MongoClients.create();
+        MongoDatabase shapeDatabase = mongo.getDatabase("shapes");
+        MongoCollection<Document> shapeColl = shapeDatabase.getCollection("shapeCollection");
+        MongoCursor<Document> cursor = shapeColl.find().iterator();
+
+        try {
+            while (cursor.hasNext()) {
+                Document curr = cursor.next();
+                for (String i : curr.keySet()) {
+                    String obj = curr.get(i).toString();
+                    shapes.put(i, obj);
+                }
+                curr.keySet();
+            }
+        } finally {
+            cursor.close();
+        }
+
+        System.out.println(shapes.toString());
+        return shapes;
+    }
+
     // returns number of alive things surrounding coords
+    // please note, there is likely some sort of unintended behavior around edges. again, this project is mostly just to learn
+    // various java functions
     private int getSurroundingCount(int y, int x) {
         int c = 0;
         // check up/down/left/right
