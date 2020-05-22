@@ -1,10 +1,10 @@
 body {
-    background-color: #303030;
+    background-color: #121212;
     color: white;
 }
 
 .board {
     letter-spacing: 2px;
     font-family: monospace;
-    color: white;
+    color: #e43f5a;     /* I know this is a super ugly color, but it's pretty easy on my eyes instead of just white. I'm sure I could find a better white but for now this looks fine. */
 }

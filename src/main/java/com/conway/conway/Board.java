@@ -28,6 +28,11 @@ public class Board {
         board[9] = new char[]{'.', '.', '.', '.', '.', '.', '.', '.', '.', '.'};
     }
 
+    // sets board to be the given custom board
+    public void customBoard(char givenBoard[][]) {
+        board = givenBoard.clone();
+    }
+
     @GetMapping("/randBoard")
     public Map<String, char[][]> genRandBoard() {
         int size = 100;
@@ -68,8 +73,8 @@ public class Board {
         } finally {
             cursor.close();
         }
-
-        System.out.println(shapes.toString());
+        shapes.remove("_id");
+        // should we have shapes saved in RLE format in the DB, and then have the html/js render it in-browser?
         return shapes;
     }
 
@@ -175,7 +180,7 @@ public class Board {
     // returns board array in "message" - accessed as "response.data.board"
     @GetMapping("/board")
     public Map<String, char[][]> runTurn() {
-        char[][] newBoard = new char[board.length][board.length];
+        char[][] newBoard = new char[board.length][board[0].length];
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 if (checkSurrounding(i, j) == true)
